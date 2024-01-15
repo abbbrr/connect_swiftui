@@ -1,8 +1,6 @@
-//
-//  AppState.swift
-//  connect
-//
-//  Created by Рауан Аблайхан on 13.01.2024.
-//
-
 import Foundation
+import SwiftUI
+
+class AppState: ObservableObject {
+    @Published var shouldNavigateToHelloView = false
+}

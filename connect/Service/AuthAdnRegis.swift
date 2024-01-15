@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-let url = "http://127.0.0.1:5000/api/"
+private let url = "http://127.0.0.1:5000/api/"
 
 class RegisterPost{
     static let shared = RegisterPost()

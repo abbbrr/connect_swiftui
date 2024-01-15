@@ -8,4 +8,5 @@ struct SectionModel: Identifiable, Hashable{
     let color: Color
     let textColor: String
     let image:String
+    var theme: String
 }

@@ -1,8 +1,13 @@
-//
-//  UserManager.swift
-//  connect
-//
-//  Created by Рауан Аблайхан on 10.01.2024.
-//
-
 import Foundation
+
+class UserManager: ObservableObject{
+    static let shared = UserManager()
+    
+    @Published var currentUser: UserRegistrationModel?
+    
+    private init() {}
+    
+    func loginUser(user: UserRegistrationModel) {
+        currentUser = user
+    }
+}

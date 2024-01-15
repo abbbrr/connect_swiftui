@@ -6,3 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
+
+class PresentationModeWrapper: ObservableObject {
+    @Published var presentationMode: PresentationMode?
+    
+    init(presentationMode: PresentationMode?) {
+        self.presentationMode = presentationMode
+    }
+}

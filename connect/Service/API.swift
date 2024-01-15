@@ -46,4 +46,20 @@ struct AnimeName:Decodable{
 }
 
 
+// group
 
+struct Group:Codable{
+    let group_id: Int
+    let group_name: String
+    var members: [String?]
+    let theme: String
+}
+
+struct UserRegistrationModel:Codable{
+    let username:String
+    let password:String
+}
+
+struct UserRegistrationResponse: Codable {
+    let message: String
+}

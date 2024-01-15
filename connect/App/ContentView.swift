@@ -1,27 +1,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.colorScheme) var colorScheme
-    @State private var helloView = "Light Mode"
+    @State private var theme: String = ""
+    @State private var groupName: String = ""
+    @State private var maxMembers: Int = 0
+    @State private var isGroupCreate:Bool = false
     
-    @State private var films: [String] = []
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         NavigationView{
-            VStack{
-                HelloUIView(helloView: helloView)
-            }
-            .onAppear {
-                if colorScheme == .dark {
-                    helloView = "Dark Mode"
-                } else {
-                    helloView = "Light Mode"
+            if !appState.shouldNavigateToHelloView{
+                VStack{
+                    HelloUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers)
                 }
+            } else{
+                GroupDetailsUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers)
             }
         }
     }
+
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()       
+//}
+//

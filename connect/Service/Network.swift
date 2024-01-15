@@ -1,10 +1,39 @@
 import Foundation
 
-protocol Randomizable {
-    associatedtype Element
-    
-    func getRandomElement(completion: @escaping (Result<Element, Error>) -> Void)
+protocol NetworkRequest {
+    associatedtype Response: Decodable
+
+    var endpoint: String { get }
+    var urlParameters: [String: String] { get }
 }
+
+extension NetworkRequest {
+    var url: URL {
+        var components = URLComponents(string: endpoint)!
+        components.queryItems = urlParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+        return components.url!
+    }
+}
+
+func performRequest<T: NetworkRequest>(_ request: T, completion: @escaping (Result<T.Response, Error>) -> Void) {
+    URLSession.shared.dataTask(with: request.url) { data, response, error in
+        guard let data = data, error == nil else {
+            completion(.failure(error ?? NetworkError.noData))
+            return
+        }
+
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let result = try decoder.decode(T.Response.self, from: data)
+            completion(.success(result))
+        } catch {
+            completion(.failure(error))
+        }
+    }.resume()
+}
+
+
 
 //Film
 class NetworkMovie {
@@ -64,6 +93,7 @@ class NetworkMovie {
         }
     }
 }
+
 
 
 //Russian Term
@@ -128,60 +158,44 @@ class RussianеTerm{
 }
 
 
-class AnimeTitle {
-    static let shared = AnimeTitle()
-    private init() {}
+//Anime title
+struct AnimeTitleRequest: NetworkRequest {
+    typealias Response = AnimeTitleName
+
+    var endpoint: String = "https://api.anilibria.tv/v2/getTitle"
+    var urlParameters: [String: String] {
+        ["id": "\(generateRandomNumber(from: numbersArray) ?? 0)"]
+    }
+
+   private let numbersArray = [8300, 8301, 8302, 8305, 8306, 8307, 8308, 8309, 8314, 8315, 8316, 8317, 8400, 8401, 8402, 8403, 8404, 8406, 8407, 8408, 8409, 8410]
 
     private func generateRandomNumber(from numbers: [Int]) -> Int? {
         guard !numbers.isEmpty else {
-            print("The array is empty")
             return nil
         }
 
         let randomIndex = Int.random(in: 0..<numbers.count)
         return numbers[randomIndex]
     }
-
-    private let numbersArray = [8300, 8301, 8302, 8305, 8306, 8307, 8308, 8309, 8314, 8315, 8316, 8317, 8400, 8401, 8402, 8403, 8404, 8406, 8407, 8408, 8409, 8410]
-
-    private lazy var url: String = {
-        guard let randomNumber = generateRandomNumber(from: numbersArray) else {
-            return ""
-        }
-        return "https://api.anilibria.tv/v2/getTitle?id=\(randomNumber)"
-    }()
-
-    func fetchAnimeTitle(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let url = URL(string: url) else {
-            completion(.failure(NetworkError.invalidURL))
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let animeTitleName = try decoder.decode(AnimeTitleName.self, from: data)
-
-                let animeName = animeTitleName.names.ru
-                completion(.success(animeName))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
-    }
 }
 
+class AnimeTitle {
+    static let shared = AnimeTitle()
+    private init() {}
+
+    func fetchAnimeTitle(completion: @escaping (Result<String, Error>) -> Void) {
+        let request = AnimeTitleRequest()
+        performRequest(request) { (result: Result<AnimeTitleName, Error>) in
+            switch result {
+            case .success(let animeTitleName):
+                let animeName = animeTitleName.names.ru
+                completion(.success(animeName))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
 
 enum NetworkError: Error {
     case invalidURL
@@ -192,10 +206,6 @@ enum NetworkError: Error {
 
 
 
-
-//    .onAppear(){
-//        RussianеTerm.shared.printRandomDefinition()
-//    }
 
 //RussianеTerm.shared.getRandomElement { result in
 //    switch result {

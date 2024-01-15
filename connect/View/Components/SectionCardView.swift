@@ -17,7 +17,7 @@ struct SectionCardView: View {
                     .font(.body)
             }
             
-            HStack(spacing:12){
+            HStack(spacing:10){
                 Image("\(section.image)")
                     .resizable()
                     .frame(width: 20, height: 20)
@@ -46,5 +46,5 @@ struct SectionCardView: View {
 }
 
 #Preview {
-    SectionCardView(section: SectionModel(name: "Социальная Сеть", description: "фильм", color: .green, textColor: "Легкий", image: "smile"), isSelected: false)
+    SectionCardView(section: SectionModel(name: "Социальная Сеть", description: "фильм", color: .green, textColor: "Легкий", image: "smile", theme: "Films"), isSelected: false)
 }

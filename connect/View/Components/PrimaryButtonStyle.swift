@@ -1,18 +1,11 @@
-//
-//  PrimaryButtonStyle.swift
-//  connect
-//
-//  Created by Рауан Аблайхан on 11.01.2024.
-//
-
 import SwiftUI
 
-struct PrimaryButtonStyle: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
+            .background(configuration.isPressed ? Color.gray : Color(red: 0.56, green: 0.16, blue: 0.07))
+            .cornerRadius(10)
     }
-}
-
-#Preview {
-    PrimaryButtonStyle()
 }

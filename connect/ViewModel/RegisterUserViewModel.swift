@@ -1,8 +1,15 @@
+//import Foundation
 //
-//  RegisterUserViewModel.swift
-//  connect
-//
-//  Created by Рауан Аблайхан on 11.01.2024.
-//
-
-import Foundation
+//RegisterPost.shared.registerUser(username: String, password: String) { result in
+//    switch result {
+//        case .success(let message):
+//            let userDefaults = UserDefaults.standard
+//            userDefaults.set(username, forKey: "usernameKey")
+//            print("Registration successful. Message: \(message)")
+//        case .failure(let error):
+//            print("Registration failed. Error: \(error.localizedDescription)")
+//        if let afError = error as? AFError, afError.responseCode == 400{
+//            
+//        }
+//    }
+//}

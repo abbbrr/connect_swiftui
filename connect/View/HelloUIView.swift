@@ -1,19 +1,16 @@
 import SwiftUI
+import Combine
 
 struct HelloUIView: View {
-    @State private var nextScreen = false
-    
-    var helloView: String
-
-    init(helloView: String) {
-        self.helloView = helloView
-    }
+    @Binding var theme: String
+    @Binding var groupName: String
+    @Binding var maxMembers: Int
     
     var body: some View {
         VStack{
             Spacer()
             
-            Text("Project Name")
+            Text("Connect Game")
                 .bold()
                 .multilineTextAlignment(.center)
                 .font(.largeTitle)
@@ -26,23 +23,19 @@ struct HelloUIView: View {
                 .font(.title3)
             
             Spacer()
-            
-            NavigationLink(destination: SectionUIView(helloView: helloView)) {
-                Text("Начать игру!")
-                    .foregroundColor(Color(.white))
-                    .font(.title2)
-                    .bold()
-            }
-            .frame(width: 300, height: 50)
-            .foregroundColor(.clear)
-            .background(Color(red: 0.89, green: 0.38, blue: 0.41))
-            .cornerRadius(16)
-            .padding(.bottom)
-            .padding()
+            ButtonAllView(firstText: "Войти в игру!", lastTesxt: "Создать игру!", destination1: ComeInUIView(), destination2: SectionUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers), firstColor: "comeinColor", lastColor: "createColor")
+//
+//            ButtonAllView(firstText: "Авторизация", lastTesxt: "Регистрация", destination1: AuthUIView(), destination2: RegisterUIView(), firstColor: "regisColor",lastColor: "regisColor")
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear(){
+            print(theme)
+            print(groupName)
+            print(maxMembers)
         }
     }
 }
 
 #Preview {
-    HelloUIView(helloView: "Dark Mode")
+    HelloUIView(theme: .constant(nil ?? ""), groupName: .constant(nil ?? ""), maxMembers: .constant(nil ?? 0))
 }

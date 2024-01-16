@@ -8,14 +8,8 @@ struct GroupDetailsUIView: View {
     }
 
     @Environment(\.presentationMode) var presentationMode
-
-    @Binding var theme: String
-    @Binding var groupName: String
-    @Binding var maxMembers: Int
-    @State private var groupData: GroupModel?
     
     var peoples: [String] = ["Adil", "Max", "Rauan", "Ernar"]
-    
     var word = "Пацанские Историй"
     
     @State private var isReady = true
@@ -37,7 +31,7 @@ struct GroupDetailsUIView: View {
                         
                         Text(people)
                             .font(
-                                Font.custom("Urbanist", size: 22)
+                                Font.custom("Urbanist", size: 18)
                                     .weight(.bold)
                             )
                             .foregroundColor(Color(red: 0.12, green: 0.14, blue: 0.17))
@@ -148,7 +142,7 @@ struct GroupDetailsUIView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(trailing: profileButton)
         .sheet(isPresented: $isShetGroupInfo) {
-            GroupInfoView(theme: $theme, groupName: $groupName)
+            GroupInfoView()
         }
     }
     
@@ -209,5 +203,5 @@ struct GroupDetailsUIView: View {
 }
 
 #Preview {
-    GroupDetailsUIView(theme: .constant(nil ?? ""), groupName: .constant(nil ?? ""), maxMembers: .constant(nil ?? 0))
+    GroupDetailsUIView()
 }

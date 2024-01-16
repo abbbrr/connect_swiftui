@@ -9,14 +9,11 @@ struct SectionUIView: View {
     
     
     @Environment(\.presentationMode) var presentationMode
-
+    @EnvironmentObject var appState:AppState
+    
     @State private var selectedSection: SectionModel? = nil
 
     @State private var section = false
-    
-    @Binding var theme: String
-    @Binding var groupName: String
-    @Binding var maxMembers: Int
         
     var body: some View {
         VStack{
@@ -27,8 +24,8 @@ struct SectionUIView: View {
                         if selectedSection == section {
                             selectedSection = nil
                         } else {
-                           selectedSection = section
-                            theme = section.theme
+                            selectedSection = section
+                            appState.theme = section.theme
                         }
                      }) {
                          SectionCardView(section: section, isSelected: selectedSection == section)
@@ -53,7 +50,7 @@ struct SectionUIView: View {
      }
     
     private var createGroupButton: some View{
-        NavigationLink(destination: CreateGroupUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers)){
+        NavigationLink(destination: CreateGroupUIView()){
             Text("Создать группу")
                 .foregroundColor(Color(.white))
                 .font(.title2)
@@ -89,5 +86,5 @@ struct SectionUIView: View {
 }
 
 #Preview {
-    SectionUIView(theme: .constant(nil ?? ""), groupName: .constant(nil ?? ""), maxMembers: .constant(nil ?? 0))
+    SectionUIView()
 }

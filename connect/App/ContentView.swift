@@ -1,28 +1,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var theme: String = ""
-    @State private var groupName: String = ""
-    @State private var maxMembers: Int = 0
-    @State private var isGroupCreate:Bool = false
-    
     @EnvironmentObject var appState: AppState
+    @State private var isActiveLink = false
     
     var body: some View {
         NavigationView{
-            if !appState.shouldNavigateToHelloView{
-                VStack{
-                    HelloUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers)
+            VStack{
+                if !appState.shouldNavigateToHelloView{
+                    HelloUIView()
+                } else if isActiveLink{
+                    GroupDetailsUIView()
+                }else{
+                    ProgressView("Создается группа...")
                 }
-            } else{
-                GroupDetailsUIView(theme: $theme, groupName: $groupName, maxMembers: $maxMembers)
+            }
+            .onAppear{
+                if appState.shouldNavigateToHelloView{
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+                        isActiveLink = true
+                    }
+                }
             }
         }
     }
 
 }
-
-//#Preview {
-//    ContentView()       
-//}
-//

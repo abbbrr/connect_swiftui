@@ -2,15 +2,12 @@ import SwiftUI
 
 struct CreateGroupUIView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var appState:AppState
     
     @State private var groups: [String] = []
     @State private var isShowCreateGroup = false
     
     @FocusState private var isFocused: Bool
-    
-    @Binding var theme: String
-    @Binding var groupName: String
-    @Binding var maxMembers: Int
     
     var body: some View {
         VStack{
@@ -71,14 +68,7 @@ struct CreateGroupUIView: View {
                         
             Spacer()
         
-            NavigationLink(destination: PeoplePointUIView(theme: $theme, maxMembers: $maxMembers, groupName: Binding(
-                get: {
-                    groups.first ?? ""
-                },
-                set: { newValue in
-                    groups = [newValue]
-                }
-            ))){
+            NavigationLink(destination: PeoplePointUIView(groupNames: groups)){
                 Text("Создать группу")
                     .foregroundColor(Color(.white))
                     .font(.title2)
@@ -117,6 +107,6 @@ struct CreateGroupUIView: View {
 }
 
 #Preview {
-    CreateGroupUIView(theme: .constant(nil ?? ""), groupName: .constant(nil ?? ""), maxMembers: .constant(nil ?? 0))
+    CreateGroupUIView()
 }
 

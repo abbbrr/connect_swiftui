@@ -12,15 +12,11 @@ extension Array {
 struct PeoplePointUIView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState:AppState
+    @ObservedObject private var viewModel = GroupViewModel()
+    var groupNames: [String]
     
     @State private var selectedPeople: Int?
     let peopleCounts: [Int] = [3,4,5,6,7,8]
-    
-    @Binding var theme: String
-    @Binding var maxMembers: Int
-    @Binding var groupName: String
-    
-    @StateObject private var groupViewModel = GroupViewModel()
         
     var body: some View {
         VStack {
@@ -30,7 +26,7 @@ struct PeoplePointUIView: View {
                     ForEach(row, id: \.self) { people in
                         Button(action: {
                             selectedPeople = people
-                            maxMembers = selectedPeople ?? 0
+                            appState.maxMembers = selectedPeople ?? 0
                         },
                         label: {
                             Text("\(people)")
@@ -80,12 +76,21 @@ struct PeoplePointUIView: View {
         .disabled((selectedPeople == nil))
     }
     
-    private func createGroup(){
-        groupViewModel.createGroup(groupName: groupName, theme: theme, maxMembers: maxMembers)
-        print(theme)
-        print(groupName)
-        print(maxMembers)
+    private func createGroup() {
+        if let firstGroupName = groupNames.first{
+            appState.groupName = firstGroupName
+        }
+        viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers) { result in
+            switch result {
+            case .success(let groupID):
+                appState.groupId = groupID
+                print("Received group ID: \(groupID)")
+            case .failure(let error):
+                print("Failed to create group: \(error.localizedDescription)")
+            }
+        }
     }
+
     
     private var createGroupButtonColor: Color {
         return (selectedPeople != nil) ? Color(red: 0.89, green: 0.38, blue: 0.41) : Color(.gray)
@@ -111,5 +116,5 @@ struct PeoplePointUIView: View {
 }
 
 #Preview {
-    PeoplePointUIView(theme: .constant(nil ?? ""), maxMembers: .constant(nil ?? 0), groupName: .constant(nil ?? ""))
+    PeoplePointUIView(groupNames: ["Banda"])
 }

@@ -1,27 +1,12 @@
 import SwiftUI
 
 struct GroupUserUIView: View {
-    struct Letter: Identifiable {
-        var id: Int
-        var char: Character
-        var isVisible: Bool
-    }
-
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState:AppState
-    
-    var peoples: [String] = ["Kolya","Max", "Rauan", "Ernar"]
-    var word = "Пацанские Историй"
-    
-    @State private var isReady = true
-    @State private var currentRow = 0
-    @State private var revealedLetters: [[Letter]] = []
-    @State private var highlightedLetterIndex: (row: Int, column: Int)? = nil
-    @State private var activeUserIndex = 0 // Добавлено новое состояние для отслеживания активного пользователя
-    @State private var isShetGroupInfo = false
-    
+    @StateObject private var viewModel = GroupInforamtionViewModel()
+     
     var maxMembers: Int = 8
-    
+        
     var body: some View {
         VStack{
             
@@ -46,9 +31,9 @@ struct GroupUserUIView: View {
             
             if maxMembers == 8{
                 VStack(alignment: .center, spacing: 15) {
-                    ForEach(revealedLetters.indices, id: \.self) { rowIndex in
+                    ForEach(viewModel.revealedLetters.indices, id: \.self) { rowIndex in
                         HStack{
-                            ForEach(revealedLetters[rowIndex]) { letter in
+                            ForEach(viewModel.revealedLetters[rowIndex]) { letter in
                                 Text(letter.isVisible ? String(letter.char) : "*")
                                     .font(
                                         Font.custom("Urbanist", size: 19)
@@ -62,7 +47,7 @@ struct GroupUserUIView: View {
                                         RoundedRectangle(cornerRadius: 8)
                                             .inset(by: 0.5)
                                             .stroke(
-                                                letter.isVisible && highlightedLetterIndex?.row == rowIndex && highlightedLetterIndex?.column == letter.id % 100 ?
+                                                letter.isVisible && viewModel.highlightedLetterIndex?.row == rowIndex && viewModel.highlightedLetterIndex?.column == letter.id % 100 ?
                                                         Color(red: 0.21, green: 0.76, blue: 0.76) :
                                                         Color(red: 0.91, green: 0.93, blue: 0.96),
                                                     lineWidth: 1
@@ -73,11 +58,7 @@ struct GroupUserUIView: View {
                     }
                 }
                 .onAppear {
-                    revealedLetters = word.split(separator: " ").enumerated().map { (index, wordPart) in
-                        wordPart.enumerated().map { (charIndex, char) in
-                            Letter(id: index * 100 + charIndex, char: char, isVisible: index == 0 && charIndex == 0)
-                        }
-                    }
+                    viewModel.setupRevealedLetters()
                 }
                 .padding()
                 .padding(.horizontal)
@@ -99,33 +80,33 @@ struct GroupUserUIView: View {
         .navigationBarTitle("User", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(trailing: profileButton)
-        .sheet(isPresented: $isShetGroupInfo) {
+        .sheet(isPresented: $viewModel.isShetGroupInfo) {
             GroupInfoView()
         }
     }
     
     private var listPeople: some View{
-        ForEach(peoples.indices, id: \.self){index in
+        ForEach(viewModel.peoples.indices, id: \.self){index in
             HStack{
-                Image(systemName: isReady ? "checkmark" : "multiply")
-                    .foregroundColor(isReady ? .green : .red)
+                Image(systemName: viewModel.isReady ? "checkmark" : "multiply")
+                    .foregroundColor(viewModel.isReady ? .green : .red)
                     .bold()
                     .frame(width: 20, height: 20)
                 
-                Text(peoples[index])
+                Text(viewModel.peoples[index])
                     .font(
-                        Font.custom("Urbanist", size: index == activeUserIndex ?  25 : 18)
+                        Font.custom("Urbanist", size: index == viewModel.activeUserIndex ?  25 : 18)
                             .weight(.bold)
                     )
-                    .foregroundColor(index == activeUserIndex ? .black : .gray)
+                    .foregroundColor(index == viewModel.activeUserIndex ? .black : .gray)
                     .padding(0.5)
                     .padding(.trailing,20)
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
             .onTapGesture {
-                if index == activeUserIndex {
-                    handleAnswer()
-                    nextUser()
+                if index == viewModel.activeUserIndex {
+                    viewModel.handleAnswer()
+                    viewModel.nextUser()
                 }
             }
         }
@@ -134,8 +115,8 @@ struct GroupUserUIView: View {
     private var buttonsReady: some View{
         HStack{
             Button {
-                handleAnswer()
-                nextUser()
+                viewModel.handleAnswer()
+                viewModel.nextUser()
             } label: {
                 Text("Не знаю")
                     .foregroundColor(.white)
@@ -151,8 +132,8 @@ struct GroupUserUIView: View {
             )
             
             Button {
-                handleAnswer()
-                nextUser()
+                viewModel.handleAnswer()
+                viewModel.nextUser()
             } label: {
                 Text("Знаю")
                     .foregroundColor(.white)
@@ -169,22 +150,11 @@ struct GroupUserUIView: View {
         }
         .padding()
     }
-    private func handleAnswer() {
-        isReady.toggle()
-    }
-
-    private func nextUser() {
-        if activeUserIndex < peoples.count - 1 {
-            activeUserIndex += 1
-        } else {
-            return
-        }
-    }
     
     private var profileButton: some View{
         HStack{
             Button {
-                isShetGroupInfo = true
+                viewModel.isShetGroupInfo = true
             } label: {
                 Image(systemName: "info.circle")
                     .foregroundColor(.black)

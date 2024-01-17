@@ -1,32 +1,18 @@
 import SwiftUI
 
-struct GroupDetailsUIView: View {
-    struct Letter: Identifiable {
-        var id: Int
-        var char: Character
-        var isVisible: Bool
-    }
-
+struct GroupDetailsUIView: View{
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState:AppState
     
-    var peoples: [String] = ["Adil", "Max", "Rauan", "Ernar"]
-    var word = "Пацанские Историй"
-    
-    @State private var isReady = true
-    @State private var currentRow = 0
-    @State private var revealedLetters: [[Letter]] = []
-    @State private var highlightedLetterIndex: (row: Int, column: Int)? = nil
-    
-    @State private var isShetGroupInfo = false
-    
+    @StateObject private var viewModel = GroupInforamtionViewModel()
+        
     var body: some View {
         VStack{
             VStack(alignment:.trailing){
-                ForEach(peoples, id: \.self){people in
+                ForEach(viewModel.peoples, id: \.self){people in
                     HStack{
-                        Image(systemName: isReady ? "checkmark" : "multiply")
-                            .foregroundColor(isReady ?  .green : .red)
+                        Image(systemName: viewModel.isReady ? "checkmark" : "multiply")
+                            .foregroundColor(viewModel.isReady ?  .green : .red)
                             .bold()
                             .frame(width: 20, height: 20)
                         
@@ -47,9 +33,9 @@ struct GroupDetailsUIView: View {
             Spacer()
             
             VStack(alignment: .center, spacing: 15) {
-                ForEach(revealedLetters.indices, id: \.self) { rowIndex in
+                ForEach(viewModel.revealedLetters.indices, id: \.self) { rowIndex in
                     HStack{
-                        ForEach(revealedLetters[rowIndex]) { letter in
+                        ForEach(viewModel.revealedLetters[rowIndex]) { letter in
                             Text(letter.isVisible ? String(letter.char) : "*")
                                 .font(
                                     Font.custom("Urbanist", size: 19)
@@ -63,7 +49,7 @@ struct GroupDetailsUIView: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .inset(by: 0.5)
                                         .stroke(
-                                            letter.isVisible && highlightedLetterIndex?.row == rowIndex && highlightedLetterIndex?.column == letter.id % 100 ?
+                                            letter.isVisible && viewModel.highlightedLetterIndex?.row == rowIndex && viewModel.highlightedLetterIndex?.column == letter.id % 100 ?
                                                     Color(red: 0.21, green: 0.76, blue: 0.76) :
                                                     Color(red: 0.91, green: 0.93, blue: 0.96),
                                                 lineWidth: 1
@@ -74,11 +60,7 @@ struct GroupDetailsUIView: View {
                 }
             }
             .onAppear {
-                revealedLetters = word.split(separator: " ").enumerated().map { (index, wordPart) in
-                    wordPart.enumerated().map { (charIndex, char) in
-                        Letter(id: index * 100 + charIndex, char: char, isVisible: index == 0 && charIndex == 0)
-                    }
-                }
+                viewModel.setupRevealedLetters()
             }
             .padding()
             .padding(.horizontal)
@@ -105,7 +87,7 @@ struct GroupDetailsUIView: View {
                 
                 HStack{
                     Button {
-                        revealAllLetters()
+                        viewModel.revealAllLetters()
                     } label: {
                         Text("Раскрыть слово")
                             .foregroundColor(.white)
@@ -121,7 +103,7 @@ struct GroupDetailsUIView: View {
                     )
                     
                     Button {
-                        revealNextLetter()
+                        viewModel.revealNextLetter()
                     } label: {
                         Text("Буква")
                             .foregroundColor(.white)
@@ -143,58 +125,15 @@ struct GroupDetailsUIView: View {
 //        .navigationBarTitle("\(appState.groupName)", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(trailing: profileButton)
-        .sheet(isPresented: $isShetGroupInfo) {
+        .sheet(isPresented: $viewModel.isShetGroupInfo) {
             GroupInfoView()
         }
     }
-    
-    
-    private func revealNextLetter() {
-        guard let nextRow = nextRowWithInvisibleLetters() else {
-            return
-        }
-
-        if let highlightedLetterIndex = highlightedLetterIndex {
-            revealedLetters[highlightedLetterIndex.row][highlightedLetterIndex.column].isVisible.toggle()
-        }
-
-        var nextRowLetters = revealedLetters[nextRow]
-
-        if let index = nextRowLetters.firstIndex(where: { !$0.isVisible }) {
-            nextRowLetters[index].isVisible.toggle()
-            highlightedLetterIndex = (row: nextRow, column: index)
-        }
-
-        revealedLetters[nextRow] = nextRowLetters
-    }
-
-
-    private func nextRowWithInvisibleLetters() -> Int? {
-        highlightedLetterIndex = nil
-
-        for rowIndex in currentRow..<revealedLetters.count {
-            if revealedLetters[rowIndex].contains(where: { !$0.isVisible }) {
-                return rowIndex
-            }
-        }
-        return nil
-    }
-
-    private func revealAllLetters() {
-        for rowIndex in 0..<revealedLetters.count {
-            for index in 0..<revealedLetters[rowIndex].count {
-                revealedLetters[rowIndex][index].isVisible = true
-            }
-        }
-        
-        highlightedLetterIndex = nil
-    }
-
-    
+      
     private var profileButton: some View{
         HStack{
             Button {
-                isShetGroupInfo = true
+                viewModel.isShetGroupInfo = true
             } label: {
                 Image(systemName: "info.circle")
                     .foregroundColor(.black)

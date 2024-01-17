@@ -7,4 +7,5 @@ class AppState: ObservableObject {
     @Published var groupName: String = ""
     @Published var theme: String = ""
     @Published var maxMembers: Int = 0
+    @Published var members:[String?: String] = [:]
 }

@@ -30,6 +30,7 @@
 		64B589622B4E9B3E008C17AD /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 64B589612B4E9B3E008C17AD /* Alamofire */; };
 		64C8F0F82B564D1D006FE647 /* GroupResponce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C8F0F72B564D1D006FE647 /* GroupResponce.swift */; };
 		64C8F1062B56FFA0006FE647 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 64C8F1052B56FFA0006FE647 /* Lottie */; };
+		64C8F1082B578EEC006FE647 /* GroupUserUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C8F1072B578EEC006FE647 /* GroupUserUIView.swift */; };
 		64F597EE2B4D093B004DAE45 /* CreateGroupUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F597ED2B4D093B004DAE45 /* CreateGroupUIView.swift */; };
 		64F82C932B47BC5800E55FAF /* connectApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F82C922B47BC5800E55FAF /* connectApp.swift */; };
 		64F82C952B47BC5800E55FAF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F82C942B47BC5800E55FAF /* ContentView.swift */; };
@@ -83,6 +84,7 @@
 		64B5895C2B4E93D2008C17AD /* ProfileUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUIView.swift; sourceTree = "<group>"; };
 		64B5895E2B4E96DF008C17AD /* CartForProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartForProfileView.swift; sourceTree = "<group>"; };
 		64C8F0F72B564D1D006FE647 /* GroupResponce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupResponce.swift; sourceTree = "<group>"; };
+		64C8F1072B578EEC006FE647 /* GroupUserUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUserUIView.swift; sourceTree = "<group>"; };
 		64F597ED2B4D093B004DAE45 /* CreateGroupUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupUIView.swift; sourceTree = "<group>"; };
 		64F82C8F2B47BC5800E55FAF /* connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = connect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64F82C922B47BC5800E55FAF /* connectApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = connectApp.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 				64B5895C2B4E93D2008C17AD /* ProfileUIView.swift */,
 				64209F892B519CAC0077228D /* PeoplePointUIView.swift */,
 				64B434D62B51ECD3008914E6 /* GroupDetailsUIView.swift */,
+				64C8F1072B578EEC006FE647 /* GroupUserUIView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				64886D002B4E759B00DCE57A /* AuthAdnRegis.swift in Sources */,
 				64C8F0F82B564D1D006FE647 /* GroupResponce.swift in Sources */,
 				643147572B502CC700D833E4 /* PrimaryButtonStyle.swift in Sources */,
+				64C8F1082B578EEC006FE647 /* GroupUserUIView.swift in Sources */,
 				64815F5D2B4BE67800CD7071 /* API.swift in Sources */,
 				642E5FD72B4EDA1B004857A1 /* UserManager.swift in Sources */,
 			);

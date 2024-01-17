@@ -8,6 +8,7 @@ struct GroupDetailsUIView: View {
     }
 
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var appState:AppState
     
     var peoples: [String] = ["Adil", "Max", "Rauan", "Ernar"]
     var word = "Пацанские Историй"
@@ -137,8 +138,9 @@ struct GroupDetailsUIView: View {
 
                 }
             }
+            .padding()
         }
-        .navigationBarTitle("Group detail", displayMode: .inline)
+//        .navigationBarTitle("\(appState.groupName)", displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(trailing: profileButton)
         .sheet(isPresented: $isShetGroupInfo) {

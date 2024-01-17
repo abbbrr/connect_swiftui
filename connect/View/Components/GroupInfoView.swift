@@ -26,7 +26,7 @@ struct GroupInfoView: View {
                     .font(.title2)
                 
                 ForEach(0..<Swift.max(peoples.count, appState.maxMembers), id: \.self) { index in
-                    let participant:String
+                    let _:String
                     if index < peoples.count {
                         let participant1 = peoples[index]
                         participantView(participant: participant1)
@@ -49,20 +49,11 @@ struct GroupInfoView: View {
     }
     
     private func participantView(participant: String) -> some View {
-        if participant == "Ожидание игрока" {
+        if participant == "Ожидание игрока..." {
             return AnyView(
-                HStack(spacing: 4) {
-                    Text(participant)
-                        .font(.custom("Urbanist", size: 22).weight(.bold))
-                        .foregroundColor(.gray)
-
-                    ForEach(0..<3) { _ in
-                        Text(".")
-                            .font(.custom("Urbanist", size: 22).weight(.bold))
-                            .foregroundColor(.gray)
-                           
-                    }
-                }
+                Text(participant)
+                    .font(.custom("Urbanist", size: 18).weight(.bold))
+                    .foregroundColor(.gray)
             )
         } else {
             return AnyView(
@@ -72,7 +63,6 @@ struct GroupInfoView: View {
             )
         }
     }
-    
     
 //    private var themeSeleceted: some View{
 //        VStack{

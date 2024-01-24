@@ -3,7 +3,8 @@ import Alamofire
 
 struct AuthUIView: View {
     @Environment(\.presentationMode) var presentationMode
-    
+    @EnvironmentObject var appState:AppState
+
     @State private var username = ""
     @State private var password = ""
     @State private var isPasswordVisible: Bool = false
@@ -83,6 +84,9 @@ struct AuthUIView: View {
         RegisterPost.shared.loginUser(username: username, password: password) { result in
             switch result {
             case .success(let message):
+                appState.username = username
+                appState.password = password
+                appState.isRegisted = true
                 handleRegistrationSuccess(message: message)
             case .failure(let error):
                 handleRegistrationFailure(error: error)
@@ -92,7 +96,7 @@ struct AuthUIView: View {
     
     private func handleRegistrationSuccess(message: String) {
         saveUsernameToUserDefaults()
-        print("Registration successful. Message: \(message)")
+        print("Authriz successful. Message: \(message)")
         presentationMode.wrappedValue.dismiss()
     }
 

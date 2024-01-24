@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 
 struct HelloUIView: View {
+    @EnvironmentObject var appState:AppState
+    
     var body: some View {
         VStack{
             Spacer()
@@ -19,11 +21,17 @@ struct HelloUIView: View {
                 .font(.title3)
             
             Spacer()
-//            ButtonAllView(firstText: "Войти в игру!", lastTesxt: "Создать игру!", destination1: ComeInUIView(), destination2: SectionUIView(), firstColor: "comeinColor", lastColor: "createColor")
-
-            ButtonAllView(firstText: "Авторизация", lastTesxt: "Регистрация", destination1: AuthUIView(), destination2: RegisterUIView(), firstColor: "regisColor",lastColor: "regisColor")
+            if appState.isRegisted{
+                ButtonAllView(firstText: "Войти в игру!", lastTesxt: "Создать игру!", destination1: ComeInUIView(), destination2: SectionUIView(), firstColor: "comeinColor", lastColor: "createColor")
+            }else{
+                ButtonAllView(firstText: "Авторизация", lastTesxt: "Регистрация", destination1: AuthUIView(), destination2: RegisterUIView(), firstColor: "regisColor",lastColor: "regisColor")
+            }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear(){
+            print(appState.username)
+            print(appState.password)
+        }
     }
 }
 

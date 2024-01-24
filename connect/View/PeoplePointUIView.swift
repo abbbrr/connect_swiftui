@@ -80,7 +80,7 @@ struct PeoplePointUIView: View {
         if let firstGroupName = groupNames.first{
             appState.groupName = firstGroupName
         }
-        viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers) { result in
+        viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers, username: appState.username) { result in
             switch result {
             case .success(let groupID):
                 appState.groupId = groupID

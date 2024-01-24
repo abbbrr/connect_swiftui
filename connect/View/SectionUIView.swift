@@ -7,28 +7,36 @@ struct SectionUIView: View {
         SectionModel(name: "Аниме", description: "персонажи, название", color: .yellow, textColor: "среднее", image: "normal", theme: "Anime"),
     ]
     
-    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState:AppState
     
     @State private var selectedSection: SectionModel? = nil
-
-    @State private var section = false
         
     var body: some View {
         VStack{
 //         MARK: Section Card
             ScrollView {
-                ForEach(sections){ section in
+                ForEach(sections, id: \.theme){ section in
                     Button(action: {
-                        if selectedSection == section {
-                            selectedSection = nil
-                        } else {
-                            selectedSection = section
-                            appState.theme = section.theme
+                        withAnimation {
+                            if appState.selectedTheme == section.theme {
+                                appState.selectedTheme = nil
+                            } else {
+                                appState.selectedTheme = section.theme
+                                appState.theme = section.theme
+                                print(appState.theme)
+                            }
                         }
                      }) {
-                         SectionCardView(section: section, isSelected: selectedSection == section)
+                         SectionCardView(section: section)
+                             .padding()
+                             .frame(width: 330, height: 150, alignment: .leading)
+                             .overlay(
+                                 RoundedRectangle(cornerRadius: 10)
+                                    .stroke(appState.selectedTheme == section.theme ? Color.red : Color.gray.opacity(0.5), lineWidth: 0.5)
+                                    .shadow(color: Color.black.opacity(0.6), radius: 4, x: 0, y: 2)
+                             )
+                             .padding(.vertical)
                     }
                 }
             }
@@ -42,7 +50,7 @@ struct SectionUIView: View {
     }
     
     private var isCreateGroupButtonActive: Bool {
-         return selectedSection != nil
+         return appState.selectedTheme != nil
      }
      
     private var createGroupButtonColor: Color {

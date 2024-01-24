@@ -2,7 +2,6 @@ import SwiftUI
 
 struct SectionCardView: View {
     var section: SectionModel
-    var isSelected:Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10){
@@ -34,17 +33,6 @@ struct SectionCardView: View {
                     .stroke(section.color.opacity(0.5), lineWidth: 1)
             )
         }
-        .padding()
-        .frame(width: 330, height: 150, alignment: .leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(isSelected ?  Color.red : Color.gray.opacity(0.5), lineWidth: isSelected ? 1:  0.5)
-                .shadow(color: Color.black.opacity(0.6), radius: 4, x: 0, y: 2)
-        )
-        .padding(.vertical)
     }
 }
 
-#Preview {
-    SectionCardView(section: SectionModel(name: "Социальная Сеть", description: "фильм", color: .green, textColor: "Легкий", image: "smile", theme: "Films"), isSelected: false)
-}

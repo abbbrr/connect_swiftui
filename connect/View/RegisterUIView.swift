@@ -3,7 +3,7 @@ import Alamofire
 
 struct RegisterUIView: View {
     @Environment(\.presentationMode) var presentationMode
-       
+    @EnvironmentObject var appState:AppState
     
     @State private var username = ""
     @State private var password = ""
@@ -207,9 +207,12 @@ struct RegisterUIView: View {
     
     private func registerUser() {
         if isValidRegistration {
-            withAnimation {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    registerUserAPI()
+            Task {
+                do {
+                    let message = try await registerUserAPI()
+                    handleRegistrationSuccess(message: message)
+                } catch {
+                    handleRegistrationFailure(error: error)
                 }
             }
         } else {
@@ -221,18 +224,21 @@ struct RegisterUIView: View {
         password.count >= 6 && password == copyPassword && username.count >= 5
     }
     
-      
-    private func registerUserAPI() {
-        RegisterPost.shared.registerUser(username: username, password: password) { result in
-            switch result {
-            case .success(let message):
-                handleRegistrationSuccess(message: message)
-            case .failure(let error):
-                handleRegistrationFailure(error: error)
+    private func registerUserAPI() async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            RegisterPost.shared.registerUser(username: username, password: password) { result in
+                switch result {
+                case .success(let message):
+                    appState.username = username
+                    appState.password = password
+                    appState.isRegisted = true
+                    continuation.resume(returning: message)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }
-    
     
     private func handleRegistrationSuccess(message: String) {
         isUsernameAvailable = true

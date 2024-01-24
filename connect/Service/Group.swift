@@ -7,13 +7,14 @@ class GroupServer: ObservableObject {
     static let shared = GroupServer()
     private init() {}
 
-    func createGroup(groupName: String, theme: String, maxMembers: Int, completion: @escaping (Result<GroupModel?, Error>) -> Void) {
+    func createGroup(groupName: String, theme: String, maxMembers: Int, username:Any, completion: @escaping (Result<GroupModel?, Error>) -> Void) {
         let endpoint = "\(url)create_group"
 
         let parameters: [String: Any] = [
             "group_name": groupName,
             "theme": theme,
-            "max_members": maxMembers
+            "max_members": maxMembers,
+            "members":username
         ]
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)

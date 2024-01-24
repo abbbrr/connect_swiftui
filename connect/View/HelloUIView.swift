@@ -19,9 +19,9 @@ struct HelloUIView: View {
                 .font(.title3)
             
             Spacer()
-            ButtonAllView(firstText: "Войти в игру!", lastTesxt: "Создать игру!", destination1: ComeInUIView(), destination2: SectionUIView(), firstColor: "comeinColor", lastColor: "createColor")
+//            ButtonAllView(firstText: "Войти в игру!", lastTesxt: "Создать игру!", destination1: ComeInUIView(), destination2: SectionUIView(), firstColor: "comeinColor", lastColor: "createColor")
 
-//            ButtonAllView(firstText: "Авторизация", lastTesxt: "Регистрация", destination1: AuthUIView(), destination2: RegisterUIView(), firstColor: "regisColor",lastColor: "regisColor")
+            ButtonAllView(firstText: "Авторизация", lastTesxt: "Регистрация", destination1: AuthUIView(), destination2: RegisterUIView(), firstColor: "regisColor",lastColor: "regisColor")
         }
         .navigationBarBackButtonHidden(true)
     }

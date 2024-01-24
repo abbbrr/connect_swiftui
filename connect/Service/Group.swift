@@ -14,7 +14,7 @@ class GroupServer: ObservableObject {
             "group_name": groupName,
             "theme": theme,
             "max_members": maxMembers,
-            "members":username
+            "members":[username]
         ]
 
         AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)

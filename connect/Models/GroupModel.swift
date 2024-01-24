@@ -16,7 +16,6 @@ struct GroupModel: Decodable {
     }
 
     struct Member: Decodable {
-        let status: String
         let username: String?
     }
 

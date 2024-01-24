@@ -26,7 +26,6 @@ struct PeoplePointUIView: View {
                     ForEach(row, id: \.self) { people in
                         Button(action: {
                             selectedPeople = people
-                            appState.maxMembers = selectedPeople ?? 0
                         },
                         label: {
                             Text("\(people)")
@@ -80,13 +79,22 @@ struct PeoplePointUIView: View {
         if let firstGroupName = groupNames.first{
             appState.groupName = firstGroupName
         }
-        viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers, username: appState.username) { result in
-            switch result {
-            case .success(let groupID):
-                appState.groupId = groupID
-                print("Received group ID: \(groupID)")
-            case .failure(let error):
-                print("Failed to create group: \(error.localizedDescription)")
+
+        DispatchQueue.main.async {
+            appState.maxMembers = selectedPeople ?? 0
+            
+            viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers, username: appState.username) { result in
+                switch result {
+                case .success(let groupID):
+                    appState.groupId = groupID
+                    print(appState.maxMembers)
+                    print(appState.groupName)
+                    print(appState.username)
+                    print("Received group ID: \(groupID)")
+                    print("----------")
+                case .failure(let error):
+                    print("Failed to create group: \(error.localizedDescription)")
+                }
             }
         }
     }

@@ -24,7 +24,6 @@ struct SectionUIView: View {
                             } else {
                                 appState.selectedTheme = section.theme
                                 appState.theme = section.theme
-                                print(appState.theme)
                             }
                         }
                      }) {

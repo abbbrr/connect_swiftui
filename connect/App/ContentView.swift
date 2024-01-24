@@ -12,11 +12,11 @@ struct ContentView: View {
                 } else if isActiveLink{
                     GroupDetailsUIView()
                         .onAppear(){
-                            print(appState.maxMembers)
-                            print(appState.username)
-                            print(appState.groupName)
-                            print(appState.groupId)
-                            print(appState.theme)
+                            print("group users \(appState.maxMembers)")
+                            print("group user \(appState.username)")
+                            print("group name \(appState.groupName)")
+                            print("group id \(appState.groupId)")
+                            print("group theme \(appState.theme)")
                         }
                 }else{
                     ProgressView("Создается группа...")

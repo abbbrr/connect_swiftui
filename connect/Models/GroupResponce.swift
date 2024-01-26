@@ -1,14 +1,26 @@
 import Foundation
 
 struct GroupResponse: Decodable {
-    let message: String
-    let groupID: Int
-    let groupName: String
+    let group_id: Int
+    let group_name: String
     let theme: String
-    let members: [Member]
+    let members: [Member]?
+    
+    enum CodingKeys: String, CodingKey {
+        case group_id
+        case group_name
+        case theme
+        case members
+    }
 }
 
 struct Member: Decodable {
     let username: String
-    let status: String
+}
+
+struct GroupData: Codable {
+    let group_name: String
+    let theme: String
+    let max_members: Int
+    let username: String
 }

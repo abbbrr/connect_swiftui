@@ -6,42 +6,24 @@ private let url = "http://127.0.0.1:5000/api/"
 class GroupServer: ObservableObject {
     static let shared = GroupServer()
     private init() {}
-
-    func createGroup(groupName: String, theme: String, maxMembers: Int, username:Any, completion: @escaping (Result<GroupModel?, Error>) -> Void) {
-        let endpoint = "\(url)create_group"
-
-        let parameters: [String: Any] = [
-            "group_name": groupName,
-            "theme": theme,
-            "max_members": maxMembers,
-            "members":[username]
-        ]
-
-        AF.request(endpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-            .validate()
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    do {
-                        let decodedData = try JSONDecoder().decode(GroupModel.self, from: data)
-                        completion(.success(decodedData))
-                    } catch {
-                        print("Error decoding response: \(error.localizedDescription)")
-                        completion(.failure(error))
-                    }
+    
+    
+    func creategroup(groupName:String,  theme: String, maxMembers: Int, username: String, completion: @escaping (Result<GroupResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(url)/create_group") else{
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+            return
+        }
+        
+        let groupData = GroupData(group_name: groupName, theme: theme, max_members: maxMembers, username: username)
+        
+        AF.request(url, method: .post, parameters: groupData, encoder: JSONParameterEncoder.default)
+            .responseDecodable(of:GroupResponse.self){ response in
+                switch response.result{
+                case .success(let groupResponse):
+                    completion(.success(groupResponse))
                 case .failure(let error):
-                    print("Error creating group: \(error.localizedDescription)")
-
-                    if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-                        print("Response data: \(utf8Text)")
-                    }
-
                     completion(.failure(error))
                 }
             }
-    }
-
-    enum MyError: Error {
-        case dataMissing
     }
 }

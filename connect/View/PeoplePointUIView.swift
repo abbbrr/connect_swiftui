@@ -12,7 +12,6 @@ extension Array {
 struct PeoplePointUIView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var appState:AppState
-    @ObservedObject private var viewModel = GroupViewModel()
     var groupNames: [String]
     
     @State private var selectedPeople: Int?
@@ -82,18 +81,14 @@ struct PeoplePointUIView: View {
 
         DispatchQueue.main.async {
             appState.maxMembers = selectedPeople ?? 0
-            
-            viewModel.createGroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers, username: appState.username) { result in
-                switch result {
-                case .success(let groupID):
-                    appState.groupId = groupID
-                    print(appState.maxMembers)
-                    print(appState.groupName)
-                    print(appState.username)
-                    print("Received group ID: \(groupID)")
-                    print("----------")
+
+            GroupServer.shared.creategroup(groupName: appState.groupName, theme: appState.theme, maxMembers: appState.maxMembers, username: appState.username) { result in
+                switch result{
+                case .success(let response):
+                    appState.groupId = response.group_id
+                    print("Успешный ответ от сервера: \(response)")
                 case .failure(let error):
-                    print("Failed to create group: \(error.localizedDescription)")
+                        print("Ошибка при взаимодействии с сервером: \(error)")
                 }
             }
         }

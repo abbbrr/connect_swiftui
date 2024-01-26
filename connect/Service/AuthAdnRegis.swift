@@ -17,6 +17,10 @@ class RegisterPost{
                 case .success(let userRegistrationResponse):
                     completion(.success(userRegistrationResponse.message))
                 case .failure(let error):
+                    print("Error decoding response: \(error.localizedDescription)")
+                    if let data = response.data {
+                        print("Response data: \(String(data: data, encoding: .utf8) ?? "Unable to convert data to string")")
+                    }
                     completion(.failure(error))
                 }
             }
